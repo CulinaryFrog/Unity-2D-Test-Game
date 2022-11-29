@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
     public float speed;
     Player player;
+    bool inactive = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,15 +21,24 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Hole")
-        {
-            Destroy(gameObject);
-        }
 
-        if (other.tag == "Player" || other.tag == "Enemy" && other.GetComponent<Enemy>().speed == 0)
+        if (inactive == false)
         {
-            speed = 0;
-            transform.parent = player.transform;
+            if (other.tag == "Hole")
+            {
+                player.AddScore();
+                Destroy(gameObject);
+            }
+
+            if (other.tag == "Player" || other.tag == "Enemy" && other.GetComponent<Enemy>().speed == 0)
+            {
+                player.TakeDamage();
+                speed = 0;
+                transform.parent = player.transform;
+            }
+
         }
+        inactive = true;
+       
     }
 }
